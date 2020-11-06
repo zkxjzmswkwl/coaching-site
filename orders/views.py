@@ -8,3 +8,12 @@ class OrderViewSet(viewsets.ModelViewSet):
 
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
+
+    def get_queryset(self):
+        data = self.request.query_params
+        query = Order.objects.all()
+        
+        if 'from_customer' in data:
+            query = Order.objects.filter(customer__username__iexact=data.get('from_customer'))
+        
+        return query
